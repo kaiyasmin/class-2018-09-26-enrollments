@@ -1,19 +1,34 @@
 ---
 title: "Enrollments"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-
+library(knitr)
 ```
 
 ```{r}
-x <- read_rds ("enrollment.rds") %>%
-select(course_name, u_grad) 
+x <- read_rds ("enrollment.rds")
 
-x
+x2 <- x %>%
+  filter(! is.na(course_name)) %>%
+  select(course_department, course_title, course_name, u_grad) %>%
+  arrange(desc(u_grad)) %>%
+  slice(1:10) 
+
+x3 <- x  %>%
+  mutate(c_length = nchar(course_name)) %>%
+  select(course_name, c_length) %>%
+  arrange(c_length) %>%
+  slice(1:7) 
+  
+x %>% kable(caption = "enrollment") 
+
+  
 
 ```
 
